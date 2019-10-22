@@ -1,5 +1,5 @@
-# README
-This file provides instructions on how to perform instructions upon `BOP19 Dataset`
+# Detection
+This file provides instructions on how to perform detections upon `BOP19 Dataset`
 
 ## Setup
 1. Set up `mmdetection` baseline according to [here](https://github.com/open-mmlab/mmdetection). 
