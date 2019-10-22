@@ -14,6 +14,7 @@ The modified version of CDPN ("CDPN: Coordinates-Based Disentangled Pose Network
 
 ## Detection
 For detection, we trained a RetinaNet for each dataset on mmdetection (https://github.com/open-mmlab/mmdetection).
+* Please refer to [`DETECTION.md`](detection/DETECTION.md)
 
 ## Pose Estimation
 In the BOP 2019 challenge, different from the paper, both of the rotation and translation are solved from the built 2D-3D correspondences by PnP algorithm. We trained a CDPN model for each object.
@@ -43,6 +44,3 @@ In the BOP 2019 challenge, different from the paper, both of the rotation and tr
 ```
   sh run.sh
 ```
-
-  
-
