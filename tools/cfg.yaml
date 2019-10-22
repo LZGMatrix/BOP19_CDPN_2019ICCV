@@ -1,0 +1,21 @@
+pytorch:
+  gpu: 0
+  threads_num: 12 
+  
+dataiter:
+  backbone_input_res: 128
+  rot_output_res: 128
+
+network:
+  coor_bin: 64
+  ver_dim: 195
+  seg_dim: 2
+  inp_dim: 3
+
+test:
+  test_mode: 'pose' # 'pose' | 'add' | 'proj' | 'all' | 'pose_fast' | 'add_fast' | 'proj_fast' | 'all_fast'
+  pnp: 'ransac' # 'ransac' | 'ePnP' | 'iterpnp'
+  detection: 'GT' 
+  ransac_projErr: 3     # the maximum reprojection error for inliers
+  ransac_iterCount: 100 # the maximum interation rounds for ransac
+
