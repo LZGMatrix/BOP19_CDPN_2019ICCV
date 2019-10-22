@@ -38,7 +38,7 @@ In the BOP 2019 challenge, different from the paper, both of the rotation and tr
   │   │   └── ... 
   ├── other datasets
   │
-  └── trained_models
+  └── trained_models (our provided trained models)
       ├── tudl
       │   ├── obj_can.checkpoint
       │   └── ...
