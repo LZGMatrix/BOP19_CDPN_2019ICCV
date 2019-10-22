@@ -37,6 +37,12 @@ In the BOP 2019 challenge, different from the paper, both of the rotation and tr
   │   │   ├── lmo_test_bop19_000002.json
   │   │   └── ... 
   ├── other datasets
+  │
+  └── trained_models
+      ├── tudl
+      │   ├── obj_can.checkpoint
+      │   └── ...
+      └── ...
 ```
 ## Run
 1. Modify the dataset path in ref.py
