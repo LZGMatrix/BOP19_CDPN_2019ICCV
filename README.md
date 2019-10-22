@@ -33,7 +33,7 @@ In the BOP 2019 challenge, different from the paper, both of the rotation and tr
   │   ├── test (official test data)
   │   │   ├── 000001
   │   │   └── ...
-  │   ├── lmo_test_bop19_retinanet (our provided detection results)
+  │   ├── tudl_test_bop19_retinanet (our provided detection results)
   │   │   ├── lmo_test_bop19_000002.json
   │   │   └── ... 
   ├── other datasets
