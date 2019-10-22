@@ -13,6 +13,9 @@ model_urls = {
     "resnet152": "https://download.pytorch.org/models/resnet152-b121ed2d.pth",
 }
 
+'''
+borrowed from https://github.com/zju3dv/pvnet
+'''
 
 def conv3x3(in_planes, out_planes, stride=1, dilation=1):
     "3x3 convolution with padding"

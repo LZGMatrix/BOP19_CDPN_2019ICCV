@@ -5,7 +5,9 @@ from network.resnet import resnet18
 
 
 class Resnet18_8s(nn.Module):
-
+    '''
+    borrowed from https://github.com/zju3dv/pvnet
+    '''
     def __init__(self, ver_dim, seg_dim, fcdim=256, s8dim=128, s4dim=64, s2dim=32, raw_dim=32, inp_dim=3):
         super(Resnet18_8s, self).__init__()
 
