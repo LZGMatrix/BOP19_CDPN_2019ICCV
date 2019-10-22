@@ -57,6 +57,6 @@ This command will generate a .csv file to record the pose estimation result for 
 ```
   python evaluation.py
 ```
-    This command will generate the final .csv file and also include the detection time.
+This command will generate the final .csv file and also include the detection time.
     
 4. Use the Bop_toolkit to evaluate the result in .csv file.
