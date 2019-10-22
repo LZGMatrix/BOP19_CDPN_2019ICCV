@@ -47,7 +47,8 @@ This file provides instructions on how to perform instructions upon `BOP19 Datas
     cd ${DETECTION_PATH}
     ```
 
-4. Make Sure you have all models in `${DETECTION_PATH}/models`
+4. Download models and store them in `${DETECTION_PATH}/models` (<b>Note: </b> We will upload the models shortly after the result of the BOP2019 Challenge)
+
 5. Generate the detection results by
     ```
     pip install tqdm -y
