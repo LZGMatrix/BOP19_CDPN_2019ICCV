@@ -50,3 +50,10 @@ In the BOP 2019 challenge, different from the paper, both of the rotation and tr
 ```
   sh run.sh
 ```
+   This command will generate a .csv file to record the pose estimation result for each object. The time in this .csv file is the wall time for pose estimation (excluding the detection time).
+3. In 'tools' directory, modify the path in evaluation.py, run
+```
+  python evaluation.py
+```
+    This command will generate the final .csv file and also include the detection time.
+4. Use the Bop_toolkit to evaluate the result in .csv file.
