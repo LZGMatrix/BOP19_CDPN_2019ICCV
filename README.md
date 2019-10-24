@@ -23,13 +23,14 @@ In the BOP 2019 challenge, different from the paper, both of the rotation and tr
 1. Download the 7 core datasets from the BOP website (https://bop.felk.cvut.cz/datasets/)
 2. Download our [trained models](https://drive.google.com/drive/folders/1GoCSOVZk0kzxS5e--oVXS83wpRHd9qJO?usp=sharing) and [detection results](https://drive.google.com/drive/folders/1nTP87zzF9l7VO3UEjcEbX61J3-6wRbuf?usp=sharing).
 3. Prepare the data as follows:
-  Note: 
-  models_eval: downloaded official models; 
-  test/test_primesense: downloaded official BOP19 test set; 
-  val:optionally, downloaded official val set;
-  trained_models: our provided trained models;
-  bbox_retinanet: our provided detection results;
-  exp: save the test result files
+
+    Note: 
+    - models_eval: downloaded official models; 
+    - test/test_primesense: downloaded official BOP19 test set; 
+    - val:optionally, downloaded official val set;
+    - trained_models: our provided trained models;
+    - bbox_retinanet: our provided detection results;
+    - exp: save the test result files
 ```
 Root
 ├── dataset
