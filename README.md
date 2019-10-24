@@ -2,7 +2,7 @@
 
 The modified version of CDPN ("CDPN: Coordinates-Based Disentangled Pose Network for Real-Time RGB-Based 6-DoF Object Pose Estimation" on ICCV 2019) for BOP: Benchmark for 6D Object Pose Estimation Challenge 2019.
 
-*Note: We provide the test code of our approach in this repo. The trained CDPN models will be provided after the submission deadline.*
+*Note: We provide the test code of our approach in this repo. We have provided the trained CDPN weights for BOP19 Challenge!*
 
 ## Our test environments
 - Ubuntu 16.04 (64bit)
@@ -23,40 +23,58 @@ In the BOP 2019 challenge, different from the paper, both of the rotation and tr
 1. Download the 7 core datasets from the BOP website (https://bop.felk.cvut.cz/datasets/)
 2. Download our trained models (https:TODO) and detection results (https:TODO).
 3. Prepare the data as follows:
+  Note: 
+  models_eval: downloaded official models; 
+  test/test_primesense: downloaded official BOP19 test set; 
+  val:optionally, downloaded official val set;
+  trained_models: our provided trained models;
+  bbox_retinanet: our provided detection results;
+  exp: save the test result files
 ```
-  ├── tudl_bop19
-  │   ├── models_eval (official models for evaluation)
-  │   │   ├── models_info.json
-  │   │   ├── obj_000001.ply
-  │   │   ├── ...
-  │   │   └── ...
-  │   ├── test (official test data)
-  │   │   ├── 000001
-  │   │   └── ...
-  │   ├── tudl_test_bop19_retinanet (our provided detection results)
-  │   │   ├── lmo_test_bop19_000002.json
-  │   │   └── ... 
-  ├── other datasets
-  │
-  └── trained_models (our provided trained models)
-      ├── tudl
-      │   ├── obj_can.checkpoint
-      │   └── ...
-      └── ...
+Root
+├── dataset
+│   ├── lmo_bop19
+│   │   ├── models_eval 
+│   │   └── test 
+│   ├── tudl_bop19
+│   │   ├── models_eval 
+│   │   └── test 
+│   ├── hb_bop19
+│   │   ├── models_eval
+│   │   ├── val 
+│   │   └── test
+│   ├── icbin_bop19
+│   │   ├── models_eval
+│   │   └── test 
+│   ├── itodd_bop19
+│   │   ├── models_eval 
+│   │   ├── val
+│   │   └── test
+│   ├── tless_bop19
+│   │   ├── models_eval
+│   │   └── test_primesense 
+│   └── ycbv_bop19
+│       ├── models_eval 
+│       └── test
+├── trained_models
+│   ├── lmo
+│   │   ├── obj_ape.checkpoint
+│   │   └── ...
+│   └── ...
+├── bbox_retinanet
+│   ├── lmo
+    │   ├── lmo_test_bop19_000002.json
+│   │   └── ... 
+│   └── ...
+├── lib
+├── tools
+├── detection
+└── exp
 ```
 ## Run
-1. Modify the dataset path in ref.py
-
-2. In 'tools' directory, run 
+1. In 'tools' directory, run 
 ```
   sh run.sh
 ```
-This command will generate a .csv file to record the pose estimation result for each object. The time in this .csv file is the wall time for pose estimation (excluding the detection time).
-
-3. In 'tools' directory, modify the path in evaluation.py, run
-```
-  python evaluation.py
-```
-This command will generate the final .csv file and also include the detection time.
-    
-4. Use the Bop_toolkit to evaluate the result in .csv file.
+It will first generate a .csv file to record the result of each object for each dataset. The final result files can be found in 'exp/final_result/CDPN_xxxx-test.csv'
+2. Use the Bop_toolkit for evaluation.
