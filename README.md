@@ -21,7 +21,7 @@ In the BOP 2019 challenge, different from the paper, both of the rotation and tr
 
 ## Data Preparation
 1. Download the 7 core datasets from the BOP website (https://bop.felk.cvut.cz/datasets/)
-2. Download our trained models (https:TODO) and detection results (https:TODO).
+2. Download our trained models (https://drive.google.com/drive/folders/1GoCSOVZk0kzxS5e--oVXS83wpRHd9qJO?usp=sharing) and detection results (https:TODO).
 3. Prepare the data as follows:
   Note: 
   models_eval: downloaded official models; 
