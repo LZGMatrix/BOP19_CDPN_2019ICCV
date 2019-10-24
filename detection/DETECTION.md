@@ -19,19 +19,19 @@ This file provides instructions on how to perform detections upon `BOP19 Dataset
     ```
     <b>Note: </b> All datasets should be in `detection/bop19` whose file system should be as following:
     ```
-    * lmo
-        * test
-            * <scene_id>
-                * rgb
-                    * <img_id>.png
-                    * ...
-                * mask_visib
-                * depth
-                * ...
-    * ycbv
-        * test
-            * ...
-    * ...
+    ├── lmo
+    │   ├── test
+    │   │   ├── <scene_id>
+    │   │   │   ├── rgb
+    │   │   │   │   ├── <img_id>.png
+    │   │   │   │   └── ...
+    │   │   │   ├── mask_visib
+    │   │   │   ├── depth
+    │   │   │   └── ...
+    ├── ycbv
+    │   ├── test
+    │   │   └── ...
+    └── ...
     ```
 3. Find the root directory of your `mmdetction` path
     ```
@@ -47,7 +47,7 @@ This file provides instructions on how to perform detections upon `BOP19 Dataset
     cd ${DETECTION_PATH}
     ```
 
-4. Download models and store them in `${DETECTION_PATH}/models` (<b>Note: </b> We will upload the models shortly after the result of the BOP2019 Challenge)
+4. Download models from [here](https://pan.baidu.com/s/1CKNQa6hVSw3l7fZtnwB0Vw) (<i><b>Password</b>: 7yjb</i>) and store them in `${DETECTION_PATH}/models` 
 
 5. Generate the detection results by
     ```
@@ -56,9 +56,9 @@ This file provides instructions on how to perform detections upon `BOP19 Dataset
     ```
 6. Then you have your detection results in `${DETECTION_PATH}/out`, and the file system is as below:
     ```
-    * hb
-        * hb_<scene_id>_detection_result.json
-        * ...
-    * ...
+    ├── hb
+    │   ├── hb_<scene_id>_detection_result.json
+    │   └── ...
+    └── ...
     ```
     You can go on test on the Pose Part using these files.
