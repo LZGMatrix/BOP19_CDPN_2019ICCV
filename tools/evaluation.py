@@ -9,6 +9,9 @@ from tqdm import tqdm
 import csv
 import json
 import re
+import sys
+import _init_paths
+import ref 
 
 # path
 this_dir = os.path.dirname(os.path.abspath(__file__))
@@ -26,7 +29,7 @@ for dataset in datasets:
     print(files)    
     # detection time
     time_total = {}
-    detection_paths = glob(os.path.join(root_dir, 'bbox', dataset.lower(), '*'))
+    detection_paths = glob(os.path.join(ref.bbox_dir, dataset.lower(), '*'))
     for detection_path in detection_paths:
         with open(detection_path, 'r') as f:
             detection_file = json.load(f)
@@ -55,7 +58,6 @@ for dataset in datasets:
         scene_id = int(data[i][0])
         im_id = int(data[i][1])
         time_pose = float(data[i][6])
-
         time_total[scene_id][im_id] += float(time_pose)
     print(time_total)
 
