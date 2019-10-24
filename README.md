@@ -20,7 +20,7 @@ For detection, we trained a RetinaNet for each dataset on [mmdetection](https://
 In the BOP 2019 challenge, different from the paper, both of the rotation and translation are solved from the built 2D-3D correspondences by PnP algorithm. We trained a CDPN model for each object.
 
 ## Data Preparation
-1. Download the 7 core datasets from the BOP website (https://bop.felk.cvut.cz/datasets/)
+1. Download the 7 core datasets from the [BOP website](https://bop.felk.cvut.cz/datasets/)
 2. Download our [trained models](https://drive.google.com/drive/folders/1GoCSOVZk0kzxS5e--oVXS83wpRHd9qJO?usp=sharing) and [detection results](https://drive.google.com/drive/folders/1nTP87zzF9l7VO3UEjcEbX61J3-6wRbuf?usp=sharing).
 3. Prepare the data as follows:
 
