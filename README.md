@@ -2,7 +2,7 @@
 
 The modified version of CDPN ("CDPN: Coordinates-Based Disentangled Pose Network for Real-Time RGB-Based 6-DoF Object Pose Estimation" on ICCV 2019) for BOP: Benchmark for 6D Object Pose Estimation Challenge 2019.
 
-*Note: We provide the test code of our approach in this repo. We have provided the trained CDPN weights for BOP19 Challenge!*
+**We have provided the trained CDPN weights for BOP19 Challenge!**
 
 ## Our test environments
 - Ubuntu 16.04 (64bit)
@@ -63,7 +63,7 @@ Root
 │   └── ...
 ├── bbox_retinanet
 │   ├── lmo
-    │   ├── lmo_test_bop19_000002.json
+│   │   ├── lmo_test_bop19_000002.json
 │   │   └── ... 
 │   └── ...
 ├── lib
