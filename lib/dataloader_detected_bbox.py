@@ -342,37 +342,6 @@ class HB(data.Dataset):
                     annot_temp['scene_id'] = int(scene)
                     annot_temp['image_id'] = int(k)                                              
                     annot.append(annot_temp)
-        '''
-        # validation set
-        for scene in ref.hb_val_scenes:
-            test_obj_dir = os.path.join(self.root_dir, 'val', scene)
-            f_bbox = os.path.join(ref.bbox_dir, 'hb_val', 'hb_{:06d}_val_result.json'.format(int(scene)))
-            with open(f_bbox, 'r') as f:
-                annot_bbox = json.load(f)
-            for k in annot_bbox.keys():  
-                score = {}
-                for i in range(len(annot_bbox[k])):
-                    cur_obj_id = annot_bbox[k][i]['obj_id']
-                    if cur_obj_id not in score.keys():
-                        score[cur_obj_id] = []
-                    score[cur_obj_id].append(annot_bbox[k][i]['score'])
-                for l in range(len(annot_bbox[k])):
-                    annot_temp = {}
-                    annot_temp['obj_id']         = annot_bbox[k][l]['obj_id']
-                    if str(annot_temp['obj_id']) not in [self.cfg.pytorch.object]:
-                        continue
-                    cur_max_score =  max(score[annot_temp['obj_id']])
-                    if cur_max_score < 0.2:
-                        continue                        
-                    if annot_bbox[k][l]['score'] != cur_max_score:
-                        continue 
-                    annot_temp['bbox'] = annot_bbox[k][l]['bbox']
-                    annot_temp['score'] = annot_bbox[k][l]['score']
-                    annot_temp['rgb_pth'] = os.path.join(test_obj_dir, 'rgb', '{:06d}.png'.format(int(k)))     
-                    annot_temp['scene_id'] = int(scene)
-                    annot_temp['image_id'] = int(k)                                              
-                    annot.append(annot_temp)
-        '''
         self.annot = annot
         self.nSamples = len(annot)
         # print('Loaded HB {} {} samples'.format(split, self.nSamples))
@@ -502,29 +471,6 @@ class ITODD(data.Dataset):
                     annot_temp['scene_id'] = int(scene)
                     annot_temp['image_id'] = int(k)                           
                     annot.append(annot_temp)
-        '''   
-        # validation set    
-        for scene in ref.itodd_val_scenes:
-            test_obj_dir = os.path.join(self.root_dir, 'val', scene)
-            f_bbox = os.path.join(ref.bbox_dir, 'itodd_val', 'itodd_{:06d}_val_result.json'.format(int(scene)))
-            with open(f_bbox, 'r') as f:
-                annot_bbox = json.load(f)
-            # merge annots
-            for k in annot_bbox.keys():  
-                for l in range(len(annot_bbox[k])):
-                    annot_temp = {}
-                    annot_temp['obj_id']         = annot_bbox[k][l]['obj_id']
-                    if ref.itodd_id2obj[annot_temp['obj_id']] not in [self.cfg.pytorch.object]:
-                        continue
-                    if annot_bbox[k][l]['score'] < 0.2:
-                        continue
-                    annot_temp['bbox'] = annot_bbox[k][l]['bbox']
-                    annot_temp['score'] = annot_bbox[k][l]['score']
-                    annot_temp['gray_pth']        = os.path.join(test_obj_dir, 'gray', '{:06d}.tif'.format(int(k)))
-                    annot_temp['scene_id'] = int(scene)
-                    annot_temp['image_id'] = int(k)                           
-                    annot.append(annot_temp)
-        '''
         self.annot = annot
         self.nSamples = len(annot)
         # print('Loaded ITODD {} {} samples'.format(split, self.nSamples))

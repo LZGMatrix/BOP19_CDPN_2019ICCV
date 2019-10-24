@@ -17,10 +17,10 @@ import os
 # ---------------------------------------------------------------- #
 root_dir = paths.rootDir
 data_cache_dir = os.path.join(root_dir, 'data')
-exp_dir = os.path.join(root_dir, 'exp') # directory storing experiment data (result, model checkpoints, etc).
-data_dir = '/home/lzg/Desktop/bbnc4/dataset'#'/media/yili/data3/lzg/6D_Challenge/dataset'
-bbox_dir = '/home/lzg/Desktop/bbnc4/CDPN_BOP19_v1/bbox'#'/media/yili/data3/lzg/6D_Challenge/CDPN_BOP19_v1/bbox'
-save_models_dir = '/home/lzg/Desktop/bbnc4/CDPN_BOP19_v1/trained_models/{}/obj_{}.checkpoint'#'/media/yili/data3/lzg/6D_Challenge/CDPN_BOP19_v1/trained_models/{}/obj_{}.checkpoint'
+exp_dir = os.path.join(root_dir, 'exp') 
+data_dir = os.path.join(root_dir, 'dataset')
+bbox_dir = os.path.join(root_dir, 'bbox_retinanet')
+save_models_dir = os.path.join(root_dir, 'trained_models/{}/obj_{}.checkpoint')
 
 
 # ---------------------------------------------------------------- #

@@ -1,7 +1,7 @@
 import os
 
 # datasets = ['LMO', 'TLESS', 'YCBV', 'TUDL', 'HB', 'ICBIN', 'ITODD']
-datasets = ['ICBIN']
+datasets = ['ITODD']
 objects_dict = {
 		'LMO': ['ape', 'can', 'cat', 'driller', 'duck', 'eggbox', 'glue', 'holepuncher'],
 		'TLESS': [str(i) for i in range(1, 31)],
@@ -14,15 +14,18 @@ objects_dict = {
 		'ICBIN': ['coffee_cup', 'juice_carton'],
 		'ITODD': [str(i) for i in range(1, 29)]
 		}
-'''
+
 # validation
 for dataset in datasets:
 	objects = objects_dict[dataset]
 	for obj in objects:
 		os.system('python main.py --cfg=cfg.yaml --exp_mod={} --dataset={} --object={}'.format('val', dataset, obj))
-'''
+
 # test
 for dataset in datasets:
 	objects = objects_dict[dataset]
 	for obj in objects:
 		os.system('python main.py --cfg=cfg.yaml --exp_mod={} --dataset={} --object={}'.format('test', dataset, obj))
+
+# get final .csv result files
+os.system('python evaluation.py')
