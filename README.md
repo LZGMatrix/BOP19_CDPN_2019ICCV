@@ -10,7 +10,7 @@ The modified version of CDPN ("CDPN: Coordinates-Based Disentangled Pose Network
 - Pytorch 0.4.1
 - CUDA 9.0
 - [Bop_toolkit](https://github.com/thodan/bop_toolkit)
-- numpy, cv2, json, plyfile, tqdm, scipy, progress, etc.
+- numpy, cv2, plyfile, tqdm, scipy, progress, etc.
 
 ## Detection
 For detection, we trained a RetinaNet for each dataset on [mmdetection](https://github.com/open-mmlab/mmdetection).
