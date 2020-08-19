@@ -1,29 +1,27 @@
-_BASE_: "../Base-FCOS.yaml"
+# {model}_[model setting]_{backbone}_{neck}_[norm setting]_[misc]_[gpu x batch_per_gpu]_{schedule}_{dataset}
+
+_BASE_: "../Base-RetinaNet.yaml"
+
 MODEL:
-  # WEIGHTS: "pretrained_models/vovnet/vovnet57_ese_detectron2.pth"
-  WEIGHTS: "pretrained_models/FCOS_vovnet/FCOS_V57_MS_3x_gu.pth"
-  # "https://www.dropbox.com/s/8xl0cb3jj51f45a/vovnet57_ese_detectron2.pth?dl=1"
+  # WEIGHTS: "detectron2://ImageNetPretrained/MSRA/R-101.pkl"
+  WEIGHTS: "pretrained_models/retina_R101_3x/model_final_971ab9.pkl"
+  RESNETS:
+    DEPTH: 101
   BACKBONE:
-    NAME: "build_fcos_vovnet_fpn_backbone"
-    FREEZE_AT: 0 # 0
-  VOVNET:
-    CONV_BODY : "V-57-eSE"
-    OUT_FEATURES: ["stage3", "stage4", "stage5"]
-  FPN:
-    IN_FEATURES: ["stage3", "stage4", "stage5"]
-  FCOS:
-    NUM_CLASSES: 30
+    FREEZE_AT: 3  # NOTE: default 2
+  RETINANET:
+    NUM_CLASSES: 8
 
 SOLVER:
   IMS_PER_BATCH: 4
   BASE_LR: 0.001
 
-  REL_STEPS: (0.78, 0.926)
+  REL_STEPS: (0.78, 0.93)
   TOTAL_EPOCHS: 8
 
 DATASETS:
-  TRAIN: ("tless_pbr_train", "tless_train_primesense_fuse_coco")
-  TEST: ("tless_bop_test_primesense",)
+  TRAIN: ("lmo_pbr_train",)
+  TEST: ("lmo_bop_test",)
 
 INPUT:
   MIN_SIZE_TRAIN: (640, 672, 704, 736, 768, 800)
@@ -43,7 +41,7 @@ INPUT:
       Sometimes(0.5, Multiply((0.7, 1.4), per_channel=0.8)),
       Sometimes(0.5, Multiply((0.7, 1.4))),
       Sometimes(0.5, ContrastNormalization((0.5, 2.0), per_channel=0.3))],
-      random_order=False)
+    random_order=False)
     # aae weaker
 
-OUTPUT_DIR: "output/bop_det/tless/fcos_V57eSE_MSx1333_ColorAugAAEWeaker_8e_tless_real_pbr"
+OUTPUT_DIR: "output/bop_det/lmo/retina_R101_FPN_MSx1333_ColorAugAAEWeaker_8e_lmo_pbr/"

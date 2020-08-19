@@ -35,7 +35,7 @@ The folder structure should like this:
 ```
 
 ## Trained models
-Download our trained models from [here](https://drive.google.com/drive/folders/1BuS7CTccc9QfMW040Na10IehWCx8--DV?usp=sharing).
+Download our trained models from [here](https://drive.google.com/drive/folders/1hTvhd1Bi3JiWghh_h3x2tN3bQdgPw-3q?usp=sharing).
 
 ## Test
 Get the detection results:
@@ -45,11 +45,11 @@ Get the detection results:
 
 For example:
 ```
-./tools/test.sh configs/BOP-Detection/fcos_V57eSE_MSx1333_ColorAugAAEWeaker_8e_lmo_pbr.yaml 0 output/bop_det/lmo/fcos_V57eSE_MSx1333_ColorAugAAEWeaker_8e_lmo_pbr/model_final_no_optim.pth
+./tools/test.sh configs/BOP-Detection/retina_R101_FPN_MSx1333_ColorAugAAEWeaker_8e_lmo_pbr.yaml 0 output/bop_det/lmo/retina_R101_FPN_MSx1333_ColorAugAAEWeaker_8e_lmo_pbr/model_final_no_optim.pth
 ```
 Then convert the results to json format:
 ```
-python tools/convert_results_to_bop.py --dataset lmo_bop_test --path output/bop_det/lmo/fcos_V57eSE_MSx1333_ColorAugAAEWeaker_8e_lmo_pbr/inference_model_final_no_optim/lmo_bop_test/instances_predictions.pth
+python tools/convert_results_to_bop.py --dataset lmo_bop_test --path output/bop_det/lmo/retina_R101_FPN_MSx1333_ColorAugAAEWeaker_8e_lmo_pbr/inference_model_final_no_optim/lmo_bop_test/instances_predictions.pth
 ```
 
 The result json file is similar to bop format `scene_gt_info.json`.
