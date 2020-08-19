@@ -45,7 +45,7 @@ class LMO(data.Dataset):
                 if ref.lmo_id2obj[annot_temp['obj_id']] not in [cfg.pytorch.object]:
                     continue
                 if annot_bbox[k][l]['score'] == max(score[annot_temp['obj_id']]) and max(score[annot_temp['obj_id']]) > 0.2:
-                    annot_temp['bbox'] = annot_bbox[k][l]['bbox']
+                    annot_temp['bbox'] = annot_bbox[k][l]['bbox_est']
                     annot_temp['score'] = annot_bbox[k][l]['score']
                 else:
                     continue
@@ -102,8 +102,11 @@ class TLESS(data.Dataset):
         for scene_id in np.arange(1, 21):
             te_scene_dir = os.path.join(ref.tless_test_dir, '{:06d}'.format(scene_id))
             f_bbox = os.path.join(ref.bbox_dir, 'tless', 'tless_{:06d}_detection_result.json'.format(scene_id))
+            f_cam = os.path.join(te_scene_dir, 'scene_camera.json') # camera_matrix vary with images in TLESS & ITODD
             with open(f_bbox, 'r') as f:
                 annot_bbox = json.load(f)
+            with open(f_cam, 'r') as f:
+                annot_cam = json.load(f)
             # merge annots
             for k in annot_bbox.keys():                
                 for l in range(len(annot_bbox[k])):
@@ -113,11 +116,12 @@ class TLESS(data.Dataset):
                         continue
                     if annot_bbox[k][l]['score'] < 0.2:
                         continue
-                    annot_temp['bbox'] = annot_bbox[k][l]['bbox']
+                    annot_temp['bbox'] = annot_bbox[k][l]['bbox_est']
                     annot_temp['score'] = annot_bbox[k][l]['score']
-                    annot_temp['rgb_pth']        = os.path.join(te_scene_dir, 'rgb', '{:06d}.png'.format(int(k)))
+                    annot_temp['rgb_pth']  = os.path.join(te_scene_dir, 'rgb', '{:06d}.png'.format(int(k)))
                     annot_temp['scene_id'] = int(scene_id)
                     annot_temp['image_id'] = int(k)
+                    annot_temp['cam_K']    = annot_cam[k]['cam_K']
                     annot.append(annot_temp)
         self.annot = annot
         self.nSamples = len(annot)
@@ -149,6 +153,7 @@ class TLESS(data.Dataset):
         scene_id = self.annot[index]['scene_id']
         image_id = self.annot[index]['image_id']
         score = self.annot[index]['score']
+        imgPath = self.annot[index]['cam_K'] # 'imgPath' in TLESS & ITODD is camera_matrix
         return inp, pose, box, center, size, cls_idx, imgPath, scene_id, image_id, score
 
     def __len__(self):
@@ -182,7 +187,7 @@ class TUDL(data.Dataset):
                     if int(annot_temp['obj_id']) != obj_id:
                         continue
                     if annot_bbox[k][l]['score'] == max(score[annot_temp['obj_id']]) and max(score[annot_temp['obj_id']]) > 0.2:
-                        annot_temp['bbox'] = annot_bbox[k][l]['bbox']
+                        annot_temp['bbox'] = annot_bbox[k][l]['bbox_est']
                         annot_temp['score'] = annot_bbox[k][l]['score']
                     else:
                         continue
@@ -236,16 +241,7 @@ class YCBV(data.Dataset):
         annot = []
         for scene in ref.ycbv_test_scenes:
             te_scene_dir = os.path.join(self.root_dir, '{}'.format(self.split.replace('val', 'test')), scene)
-            f_pose = os.path.join(te_scene_dir, 'scene_gt.json')
-            f_det = os.path.join(te_scene_dir, 'scene_gt_info.json')
-            f_cam = os.path.join(te_scene_dir, 'scene_camera.json')
             f_bbox = os.path.join(ref.bbox_dir, 'ycbv', 'ycbv_{:06d}_detection_result.json'.format(int(scene)))
-            with open(f_pose, 'r') as f:
-                annot_pose = json.load(f)
-            with open(f_det, 'r') as f:
-                annot_det = json.load(f)
-            with open(f_cam, 'r') as f:
-                annot_cam = json.load(f)
             with open(f_bbox, 'r') as f:
                 annot_bbox = json.load(f)
             # merge annots
@@ -254,14 +250,20 @@ class YCBV(data.Dataset):
                 for i in range(len(annot_bbox[k])):
                     if annot_bbox[k][i]['obj_id'] not in score.keys():
                         score[annot_bbox[k][i]['obj_id']] = []
+                    if 'score' not in annot_bbox[k][i].keys():
+                        print('No score in scene {}, image {}, bbox {}'.format(scene, k, annot_bbox[k][i]))
+                        continue
                     score[annot_bbox[k][i]['obj_id']].append(annot_bbox[k][i]['score'])              
                 for l in range(len(annot_bbox[k])):
                     annot_temp = {}
                     annot_temp['obj_id']         = annot_bbox[k][l]['obj_id']
                     if ref.ycbv_id2obj[annot_temp['obj_id']] not in [self.cfg.pytorch.object]:
                         continue
+                    if 'score' not in annot_bbox[k][l].keys():
+                        print('No score in scene {}, image {}, bbox {}'.format(scene, k, annot_bbox[k][l]))
+                        continue
                     if annot_bbox[k][l]['score'] == max(score[annot_temp['obj_id']]) and max(score[annot_temp['obj_id']]) > 0.2:
-                        annot_temp['bbox'] = annot_bbox[k][l]['bbox']
+                        annot_temp['bbox'] = annot_bbox[k][l]['bbox_est']
                         annot_temp['score'] = annot_bbox[k][l]['score']
                     else:
                         continue
@@ -313,10 +315,41 @@ class HB(data.Dataset):
         # print('==> initializing {} {} data.'.format(cfg.pytorch.dataset, split))
         ## load dataset
         annot = []
+        '''
         # test set
-        for scene in ref.hb_val_scenes:
-            test_obj_dir = os.path.join(self.root_dir, 'test', scene)
+        for scene in ref.hb_test_scenes:
+            test_obj_dir = os.path.join(self.root_dir, 'test_bop19', scene)
             f_bbox = os.path.join(ref.bbox_dir, 'hb', 'hb_{:06d}_detection_result.json'.format(int(scene)))
+            with open(f_bbox, 'r') as f:
+                annot_bbox = json.load(f)
+            for k in annot_bbox.keys():  
+                score = {}
+                for i in range(len(annot_bbox[k])):
+                    cur_obj_id = annot_bbox[k][i]['obj_id']
+                    if cur_obj_id not in score.keys():
+                        score[cur_obj_id] = []
+                    score[cur_obj_id].append(annot_bbox[k][i]['score'])
+                for l in range(len(annot_bbox[k])):
+                    annot_temp = {}
+                    annot_temp['obj_id']         = annot_bbox[k][l]['obj_id']
+                    if str(annot_temp['obj_id']) not in [self.cfg.pytorch.object]:
+                        continue
+                    cur_max_score =  max(score[annot_temp['obj_id']])
+                    if cur_max_score < 0.2:
+                        continue                        
+                    if annot_bbox[k][l]['score'] != cur_max_score:
+                        continue 
+                    annot_temp['bbox'] = annot_bbox[k][l]['bbox_est']
+                    annot_temp['score'] = annot_bbox[k][l]['score']
+                    annot_temp['rgb_pth'] = os.path.join(test_obj_dir, 'rgb', '{:06d}.png'.format(int(k)))     
+                    annot_temp['scene_id'] = int(scene)
+                    annot_temp['image_id'] = int(k)                                            
+                    annot.append(annot_temp)
+        '''
+        # validation set
+        for scene in ref.hb_val_scenes:
+            test_obj_dir = os.path.join(self.root_dir, 'val', scene)
+            f_bbox = os.path.join(ref.bbox_dir, 'hb_val', 'hb_{:06d}_val_result.json'.format(int(scene)))
             with open(f_bbox, 'r') as f:
                 annot_bbox = json.load(f)
             for k in annot_bbox.keys():  
@@ -342,6 +375,7 @@ class HB(data.Dataset):
                     annot_temp['scene_id'] = int(scene)
                     annot_temp['image_id'] = int(k)                                              
                     annot.append(annot_temp)
+        
         self.annot = annot
         self.nSamples = len(annot)
         # print('Loaded HB {} {} samples'.format(split, self.nSamples))
@@ -400,7 +434,7 @@ class ICBIN(data.Dataset):
                         continue
                     if annot_bbox[k][l]['score'] < 0.2:
                         continue
-                    annot_temp['bbox'] = annot_bbox[k][l]['bbox']
+                    annot_temp['bbox'] = annot_bbox[k][l]['bbox_est']
                     annot_temp['score'] = annot_bbox[k][l]['score']
                     annot_temp['rgb_pth'] = os.path.join(test_obj_dir, 'rgb', '{:06d}.png'.format(int(k)))
                     annot_temp['scene_id'] = int(scene)
@@ -450,10 +484,40 @@ class ITODD(data.Dataset):
         # print('==> initializing {} {} data.'.format(cfg.pytorch.dataset, split))
         ## load dataset
         annot = []
+        '''
         # test set
         for scene in ref.itodd_val_scenes:
             test_obj_dir = os.path.join(self.root_dir, 'test', scene)
             f_bbox = os.path.join(ref.bbox_dir, 'itodd', 'itodd_{:06d}_detection_result.json'.format(int(scene)))
+            f_cam = os.path.join(test_obj_dir, 'scene_camera.json') # camera_matrix vary with images in TLESS & ITODD
+            with open(f_bbox, 'r') as f:
+                annot_bbox = json.load(f)
+            with open(f_cam, 'r') as f:
+                annot_cam = json.load(f)
+            # merge annots
+            for k in annot_bbox.keys():  
+                for l in range(len(annot_bbox[k])):
+                    annot_temp = {}
+                    annot_temp['obj_id']         = annot_bbox[k][l]['obj_id']
+                    if ref.itodd_id2obj[annot_temp['obj_id']] not in [self.cfg.pytorch.object]:
+                        continue
+                    if annot_bbox[k][l]['score'] < 0.2:
+                        continue
+                    annot_temp['bbox'] = annot_bbox[k][l]['bbox_est']
+                    annot_temp['score'] = annot_bbox[k][l]['score']
+                    annot_temp['gray_pth']        = os.path.join(test_obj_dir, 'gray', '{:06d}.tif'.format(int(k)))
+                    annot_temp['scene_id'] = int(scene)
+                    annot_temp['image_id'] = int(k)   
+                    annot_temp['cam_K']    = annot_cam[k]['cam_K']                        
+                    annot.append(annot_temp)
+        '''   
+        # validation set    
+        for scene in ref.itodd_val_scenes:
+            test_obj_dir = os.path.join(self.root_dir, 'val', scene)
+            f_cam = os.path.join(test_obj_dir, 'scene_camera.json') # camera_matrix vary with images in TLESS & ITODD
+            with open(f_cam, 'r') as f:
+                annot_cam = json.load(f)
+            f_bbox = os.path.join(ref.bbox_dir, 'itodd_val', 'itodd_{:06d}_val_result.json'.format(int(scene)))
             with open(f_bbox, 'r') as f:
                 annot_bbox = json.load(f)
             # merge annots
@@ -469,7 +533,8 @@ class ITODD(data.Dataset):
                     annot_temp['score'] = annot_bbox[k][l]['score']
                     annot_temp['gray_pth']        = os.path.join(test_obj_dir, 'gray', '{:06d}.tif'.format(int(k)))
                     annot_temp['scene_id'] = int(scene)
-                    annot_temp['image_id'] = int(k)                           
+                    annot_temp['image_id'] = int(k)                          
+                    annot_temp['cam_K']    = annot_cam[k]['cam_K'] 
                     annot.append(annot_temp)
         self.annot = annot
         self.nSamples = len(annot)
@@ -493,7 +558,8 @@ class ITODD(data.Dataset):
 
     def __getitem__(self, index):
         cls_idx, rgb_crop, box, c, s = self.GetPartInfo(index)       
-        inp = rgb_crop[:, :, 0][None, :, :].astype(np.float32) / 255.
+        # inp = rgb_crop[:, :, 0][None, :, :].astype(np.float32) / 255.
+        inp = rgb_crop.transpose(2, 0, 1).astype(np.float32) / 255.
         pose = np.zeros((3, 4))
         center = c
         size = s
@@ -502,6 +568,7 @@ class ITODD(data.Dataset):
         scene_id = self.annot[index]['scene_id']
         image_id = self.annot[index]['image_id']
         score = self.annot[index]['score']
+        imgPath = self.annot[index]['cam_K'] # 'imgPath' in TLESS & ITODD is camera_matrix
         return inp, pose, box, center, size, cls_idx, imgPath, scene_id, image_id, score
 
     def __len__(self):

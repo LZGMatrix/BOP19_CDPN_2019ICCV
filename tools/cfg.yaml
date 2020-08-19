@@ -3,10 +3,13 @@ pytorch:
   threads_num: 12 
   
 dataiter:
-  backbone_input_res: 128
-  rot_output_res: 128
+  backbone_input_res: 256
+  rot_output_res: 64
 
 network:
+  inp_dim: 3
+  out_dim: 197
+  back_layers_num: 34
   coor_bin: 64
   ver_dim: 195
   seg_dim: 2

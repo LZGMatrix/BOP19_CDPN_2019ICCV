@@ -17,9 +17,9 @@ import os
 # ---------------------------------------------------------------- #
 root_dir = paths.rootDir
 data_cache_dir = os.path.join(root_dir, 'data')
-exp_dir = os.path.join(root_dir, 'exp') 
-data_dir = os.path.join(root_dir, 'dataset')
-bbox_dir = os.path.join(root_dir, 'bbox_retinanet')
+exp_dir = os.path.join(root_dir, 'exp') # directory storing experiment data (result, model checkpoints, etc).
+data_dir = '/bbnc6'
+bbox_dir = os.path.join(root_dir, 'bbox')
 save_models_dir = os.path.join(root_dir, 'trained_models/{}/obj_{}.checkpoint')
 
 
@@ -57,28 +57,11 @@ lmo_camera_matrix = np.array([[572.4114, 0, 325.2611], [0, 573.57043, 242.04899]
 # HB DATASET
 # ---------------------------------------------------------------- #
 hb_dir = os.path.join(data_dir, 'hb_bop19')
-hb_test_dir = os.path.join(hb_dir, 'test')
+hb_test_dir = os.path.join(hb_dir, 'test_bop19')
 hb_model_dir = hb_model_eval_dir = os.path.join(hb_dir, 'models_eval')
 # object info
-hb_objects = ['1', '3', '4', '8', '9', '10', '12', '15', '17', '18', '19', '22', '23', '29', '32', '33']
-hb_id2obj = {
-             1: '1',
-             3: '3',
-             4: '4',
-             8: '8',
-             9: '9',
-             10: '10',
-             12: '12',
-             15: '15',
-             17: '17',
-             18: '18',
-             19: '19',
-             22: '22',
-             23: '23',
-             29: '29',
-             32: '32',
-             33: '33', 
-             }
+hb_objects = [str(i) for i in range(1, 34)]
+hb_id2obj = {int(i):str(i) for i in range(1, 34)}
 hb_obj_num = len(hb_id2obj)
 def hb_obj2id(obj_name):
     for k, v in hb_id2obj.items():
@@ -86,6 +69,7 @@ def hb_obj2id(obj_name):
             return k
 hb_test_scenes = ['000003', '000005', '000013']
 hb_val_scenes = ['000003', '000005', '000013']
+# hb_val_scenes = ['{:06d}'.format(i) for i in range(14)]
 # Camera info
 hb_width = 640
 hb_height = 480
@@ -111,7 +95,7 @@ def tless_obj2id(obj_name):
 tless_width = 720
 tless_height = 540
 tless_center = (tless_width / 2., tless_height / 2.)
-tless_camera_matrix = np.array([[1075.65091572, 0.0, 374.06888344], [0.0, 1073.90347929, 255.72159802], [0, 0, 1]])
+tless_camera_matrix = np.array([[1075.65091572, 0.0, 374.06888344], [0.0, 1073.90347929, 255.72159802], [0, 0, 1]]) # camera_matrix vary with images in TLESS
 
 
 # ---------------------------------------------------------------- #
@@ -231,4 +215,4 @@ itodd_test_scenes = ['000001']
 itodd_width = 1280
 itodd_height = 960
 itodd_center = (itodd_height / 2, itodd_width / 2)
-itodd_camera_matrix = np.array([[2992.63, 0.0, 633.886], [0.0, 3003.99, 489.554], [0, 0, 1]])
+# itodd_camera_matrix = np.array([[2992.63, 0.0, 633.886], [0.0, 3003.99, 489.554], [0, 0, 1]]) # camera_matrix vary with images in ITODD

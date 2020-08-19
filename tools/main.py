@@ -85,7 +85,7 @@ def main():
             models_info[int(k)] = models_info.pop(k)
 
     models_vtx = {}
-    for obj_name in [cfg.pytorch.object]:
+    for obj_name in [cfg.pytorch.object]:    
         if cfg.pytorch.dataset.lower() == 'lmo': 
             obj_id = ref.lmo_obj2id(obj_name)
         elif cfg.pytorch.dataset.lower() == 'tless':
@@ -99,7 +99,8 @@ def main():
         elif cfg.pytorch.dataset.lower() == 'icbin': 
             obj_id = ref.icbin_obj2id(obj_name)            
         elif cfg.pytorch.dataset.lower() == 'itodd':
-            obj_id = ref.itodd_obj2id(obj_name)                           
+            obj_id = ref.itodd_obj2id(obj_name)  
+          
         models_vtx[obj_name] = get_ply_model(os.path.join(model_dir, 'obj_{:06d}.ply'.format(obj_id)))
 
     ## load model, optimizer, criterions

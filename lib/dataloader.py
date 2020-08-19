@@ -178,7 +178,8 @@ class TLESS(data.Dataset):
         scene_id = self.annot[index]['scene_id']
         image_id = self.annot[index]['image_id']
         score = self.annot[index]['score']
-        return inp, pose, box, center, size, cls_idx, imgPath, scene_id, image_id, score
+        K = self.annot[index]['cam_K']
+        return inp, pose, box, center, size, cls_idx, K, scene_id, image_id, score
 
     def __len__(self):
         return self.nSamples

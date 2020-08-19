@@ -30,6 +30,9 @@ def get_default_dataiter_config():
 def get_default_network_config():
     config = edict()
     config.coor_bin = 64
+    config.inp_dim = 3
+    config.out_dim = 197 # 3 * (64 + 1) + 2
+    config.back_layers_num = 34
     config.seg_dim = 2
     config.ver_dim = 3 * 65
     config.inp_dim = 3
@@ -100,7 +103,7 @@ class cfg():
             config.pytorch['width'] = 640
             config.pytorch['height'] = 480
         elif config.pytorch.dataset.lower() == 'tless':
-            config.pytorch['camera_matrix'] = ref.tless_camera_matrix
+            config.pytorch['camera_matrix'] = ref.tless_camera_matrix # camera_matrix vary with images in TLESS
             config.pytorch['width'] = 720
             config.pytorch['height'] = 540
         elif config.pytorch.dataset.lower() == 'tudl':
@@ -116,10 +119,9 @@ class cfg():
             config.pytorch['width'] = 640
             config.pytorch['height'] = 480      
         elif config.pytorch.dataset.lower() == 'itodd':
-            config.pytorch['camera_matrix'] = ref.itodd_camera_matrix
+            # config.pytorch['camera_matrix'] = ref.itodd_camera_matrix # camera_matrix vary with images in ITODD
             config.pytorch['width'] = 1280
             config.pytorch['height'] = 960  
-            config.network.inp_dim = 1                                             
         else:
             raise Exception("Wrong dataset name: {}".format(config.pytorch.dataset))
 

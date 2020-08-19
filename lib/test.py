@@ -10,7 +10,7 @@ from progress.bar import Bar
 
 def test(cfg, dataLoader, model, models_info=None, models_vtx=None):
     model.eval()
-    if cfg.pytorch.exp_mode == 'val':
+    if cfg.pytorch.exp_mode in ['val']:
         from eval import Evaluation
         Eval = Evaluation(cfg.pytorch, models_info, models_vtx)     
     elif cfg.pytorch.exp_mode == 'test':
@@ -25,8 +25,10 @@ def test(cfg, dataLoader, model, models_info=None, models_vtx=None):
     bar = Bar('{}_{}'.format(cfg.pytorch.dataset, cfg.pytorch.object), max=nIters)
     wall_time = 0
     for i, (input, pose, bbox, center, size, clsIdx, imgPath, scene_id, image_id, score) in enumerate(dataLoader):
-        input_var       = input.cuda(cfg.pytorch.gpu, async=True).float().cuda(cfg.pytorch.gpu)
+        input_var = input.cuda(cfg.pytorch.gpu, async=True).float().cuda(cfg.pytorch.gpu)
         batch_size = len(input)
+        if cfg.pytorch.dataset.lower() == 'tless' or cfg.pytorch.dataset.lower() == 'itodd': # camera_matrix vary with images in TLESS & ITODD
+            K = np.array(imgPath).reshape(3,3) # 'imgPath' in TLESS & ITODD is camera_matrix
         # time begin
         T_begin = time.time()
         output_conf, output_coor_x, output_coor_y, output_coor_z = model(input_var)
@@ -54,6 +56,7 @@ def test(cfg, dataLoader, model, models_info=None, models_vtx=None):
                 cls = ref.icbin_id2obj[clsIdx_]
             elif cfg.pytorch.dataset.lower() == 'itodd':
                 cls = ref.itodd_id2obj[int(clsIdx_)]
+            
 
             select_pts_2d = []
             select_pts_3d = []
@@ -94,7 +97,11 @@ def test(cfg, dataLoader, model, models_info=None, models_vtx=None):
             model_points = np.asarray(select_pts_3d, dtype=np.float32)
             image_points = np.asarray(select_pts_2d, dtype=np.float32)
             try:
-                _, R_vector, T_vector, inliers = cv2.solvePnPRansac(model_points, image_points,
+                if cfg.pytorch.dataset.lower() == 'tless' or cfg.pytorch.dataset.lower() == 'itodd': # camera_matrix vary with images in TLESS & ITODD
+                    _, R_vector, T_vector, inliers = cv2.solvePnPRansac(model_points, image_points,
+                                        K, np.zeros((4, 1)), flags=cv2.SOLVEPNP_EPNP)
+                else:
+                    _, R_vector, T_vector, inliers = cv2.solvePnPRansac(model_points, image_points,
                                         cfg.pytorch.camera_matrix, np.zeros((4, 1)), flags=cv2.SOLVEPNP_EPNP)
                 cur_wall_time = time.time() - T_begin
                 wall_time += cur_wall_time
@@ -112,7 +119,7 @@ def test(cfg, dataLoader, model, models_info=None, models_vtx=None):
                            'score': float(score_), 'obj_id': int(clsIdx), 'time': cur_wall_time}
                     rst_collect.append(rst)
             except:
-                if cfg.pytorch.exp_mode == 'val':
+                if cfg.pytorch.exp_mode in ['val']:
                     Eval.num[cls] += 1
                     Eval.numAll += 1                
         Bar.suffix = '{0} [{1}/{2}]| Total: {total:} | ETA: {eta:}'.format(cfg.pytorch.exp_mode, i, nIters, total=bar.elapsed_td, eta=bar.eta_td)
