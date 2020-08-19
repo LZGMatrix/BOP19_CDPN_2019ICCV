@@ -69,7 +69,6 @@ def hb_obj2id(obj_name):
             return k
 hb_test_scenes = ['000003', '000005', '000013']
 hb_val_scenes = ['000003', '000005', '000013']
-# hb_val_scenes = ['{:06d}'.format(i) for i in range(14)]
 # Camera info
 hb_width = 640
 hb_height = 480
@@ -95,7 +94,7 @@ def tless_obj2id(obj_name):
 tless_width = 720
 tless_height = 540
 tless_center = (tless_width / 2., tless_height / 2.)
-tless_camera_matrix = np.array([[1075.65091572, 0.0, 374.06888344], [0.0, 1073.90347929, 255.72159802], [0, 0, 1]]) # camera_matrix vary with images in TLESS
+# tless_camera_matrix = np.array([[1075.65091572, 0.0, 374.06888344], [0.0, 1073.90347929, 255.72159802], [0, 0, 1]]) # camera_matrix vary with images in TLESS
 
 
 # ---------------------------------------------------------------- #

@@ -30,8 +30,11 @@ class LMO(data.Dataset):
         annot = []
         te_obj_dir = os.path.join(self.root_dir, 'test/000002')
         f_bbox = os.path.join(ref.bbox_dir, 'lmo', 'lmo_000002_detection_result.json')
+        f_cam = os.path.join(te_obj_dir, 'scene_camera.json')
         with open(f_bbox, 'r') as f:
             annot_bbox = json.load(f)
+        with open(f_cam, 'r') as f:
+            annot_cam = json.load(f)
         # merge annots
         for k in annot_bbox.keys():       
             score = {}
@@ -49,9 +52,10 @@ class LMO(data.Dataset):
                     annot_temp['score'] = annot_bbox[k][l]['score']
                 else:
                     continue
-                annot_temp['rgb_pth']        = os.path.join(te_obj_dir, 'rgb', '{:06d}.png'.format(int(k)))   
+                annot_temp['rgb_pth']  = os.path.join(te_obj_dir, 'rgb', '{:06d}.png'.format(int(k)))   
                 annot_temp['scene_id'] = 2
-                annot_temp['image_id'] = int(k)                             
+                annot_temp['image_id'] = int(k)  
+                annot_temp['cam_K']    = annot_cam[k]['cam_K']                           
                 annot.append(annot_temp)
         self.annot = annot
         self.nSamples = len(annot)
@@ -84,7 +88,8 @@ class LMO(data.Dataset):
         scene_id = self.annot[index]['scene_id']
         image_id = self.annot[index]['image_id']
         score = self.annot[index]['score']
-        return inp, pose, box, center, size, cls_idx, imgPath, scene_id, image_id, score
+        K = np.array(self.annot[index]['cam_K']).reshape(3, 3)
+        return inp, pose, box, center, size, cls_idx, imgPath, scene_id, image_id, score, K
 
 
     def __len__(self):
@@ -153,8 +158,8 @@ class TLESS(data.Dataset):
         scene_id = self.annot[index]['scene_id']
         image_id = self.annot[index]['image_id']
         score = self.annot[index]['score']
-        imgPath = self.annot[index]['cam_K'] # 'imgPath' in TLESS & ITODD is camera_matrix
-        return inp, pose, box, center, size, cls_idx, imgPath, scene_id, image_id, score
+        K = np.array(self.annot[index]['cam_K']).reshape(3, 3)
+        return inp, pose, box, center, size, cls_idx, imgPath, scene_id, image_id, score, K
 
     def __len__(self):
         return self.nSamples
@@ -172,8 +177,11 @@ class TUDL(data.Dataset):
             obj_id = ref.tudl_obj2id(obj)
             te_scene_dir = os.path.join(self.root_dir, '{}'.format(self.split.replace('val', 'test')), '{:06d}'.format(obj_id))
             f_bbox = os.path.join(ref.bbox_dir, 'tudl', 'tudl_{:06d}_detection_result.json'.format(obj_id))
+            f_cam = os.path.join(te_scene_dir, 'scene_camera.json')
             with open(f_bbox, 'r') as f:
                 annot_bbox = json.load(f)
+            with open(f_cam, 'r') as f:
+                annot_cam = json.load(f)
             # merge annots
             for k in annot_bbox.keys():     
                 score = {}
@@ -191,9 +199,10 @@ class TUDL(data.Dataset):
                         annot_temp['score'] = annot_bbox[k][l]['score']
                     else:
                         continue
-                    annot_temp['rgb_pth']        = os.path.join(te_scene_dir, 'rgb', '{:06d}.png'.format(int(k)))
+                    annot_temp['rgb_pth']  = os.path.join(te_scene_dir, 'rgb', '{:06d}.png'.format(int(k)))
                     annot_temp['scene_id'] = int(obj_id)
-                    annot_temp['image_id'] = int(k)                    
+                    annot_temp['image_id'] = int(k) 
+                    annot_temp['cam_K']    = annot_cam[k]['cam_K']                   
                     annot.append(annot_temp)
         self.annot = annot
         self.nSamples = len(annot)
@@ -225,7 +234,8 @@ class TUDL(data.Dataset):
         scene_id = self.annot[index]['scene_id']
         image_id = self.annot[index]['image_id']
         score = self.annot[index]['score']
-        return inp, pose, box, center, size, cls_idx, imgPath, scene_id, image_id, score
+        K = np.array(self.annot[index]['cam_K']).reshape(3, 3)
+        return inp, pose, box, center, size, cls_idx, imgPath, scene_id, image_id, score, K
 
     def __len__(self):
         return self.nSamples
@@ -242,8 +252,11 @@ class YCBV(data.Dataset):
         for scene in ref.ycbv_test_scenes:
             te_scene_dir = os.path.join(self.root_dir, '{}'.format(self.split.replace('val', 'test')), scene)
             f_bbox = os.path.join(ref.bbox_dir, 'ycbv', 'ycbv_{:06d}_detection_result.json'.format(int(scene)))
+            f_cam = os.path.join(te_scene_dir, 'scene_camera.json')
             with open(f_bbox, 'r') as f:
                 annot_bbox = json.load(f)
+            with open(f_cam, 'r') as f:
+                annot_cam = json.load(f)
             # merge annots
             for k in annot_bbox.keys():  
                 score = {}
@@ -267,9 +280,10 @@ class YCBV(data.Dataset):
                         annot_temp['score'] = annot_bbox[k][l]['score']
                     else:
                         continue
-                    annot_temp['rgb_pth']        = os.path.join(te_scene_dir, 'rgb', '{:06d}.png'.format(int(k)))
+                    annot_temp['rgb_pth']  = os.path.join(te_scene_dir, 'rgb', '{:06d}.png'.format(int(k)))
                     annot_temp['scene_id'] = int(scene)
-                    annot_temp['image_id'] = int(k)                    
+                    annot_temp['image_id'] = int(k)  
+                    annot_temp['cam_K']    = annot_cam[k]['cam_K']                  
                     annot.append(annot_temp)
         self.annot = annot
         self.nSamples = len(annot)
@@ -301,7 +315,8 @@ class YCBV(data.Dataset):
         scene_id = self.annot[index]['scene_id']
         image_id = self.annot[index]['image_id']
         score = self.annot[index]['score']
-        return inp, pose, box, center, size, cls_idx, imgPath, scene_id, image_id, score
+        K = np.array(self.annot[index]['cam_K']).reshape(3, 3)
+        return inp, pose, box, center, size, cls_idx, imgPath, scene_id, image_id, score, K
 
     def __len__(self):
         return self.nSamples
@@ -315,13 +330,15 @@ class HB(data.Dataset):
         # print('==> initializing {} {} data.'.format(cfg.pytorch.dataset, split))
         ## load dataset
         annot = []
-        '''
         # test set
         for scene in ref.hb_test_scenes:
-            test_obj_dir = os.path.join(self.root_dir, 'test_bop19', scene)
+            test_obj_dir = os.path.join(self.root_dir, '{}_bop19'.format(split), scene)
             f_bbox = os.path.join(ref.bbox_dir, 'hb', 'hb_{:06d}_detection_result.json'.format(int(scene)))
+            f_cam = os.path.join(test_obj_dir, 'scene_camera.json')
             with open(f_bbox, 'r') as f:
                 annot_bbox = json.load(f)
+            with open(f_cam, 'r') as f:
+                annot_cam = json.load(f)
             for k in annot_bbox.keys():  
                 score = {}
                 for i in range(len(annot_bbox[k])):
@@ -343,7 +360,8 @@ class HB(data.Dataset):
                     annot_temp['score'] = annot_bbox[k][l]['score']
                     annot_temp['rgb_pth'] = os.path.join(test_obj_dir, 'rgb', '{:06d}.png'.format(int(k)))     
                     annot_temp['scene_id'] = int(scene)
-                    annot_temp['image_id'] = int(k)                                            
+                    annot_temp['image_id'] = int(k) 
+                    annot_temp['cam_K']    = annot_cam[k]['cam_K']                                           
                     annot.append(annot_temp)
         '''
         # validation set
@@ -375,7 +393,7 @@ class HB(data.Dataset):
                     annot_temp['scene_id'] = int(scene)
                     annot_temp['image_id'] = int(k)                                              
                     annot.append(annot_temp)
-        
+        '''
         self.annot = annot
         self.nSamples = len(annot)
         # print('Loaded HB {} {} samples'.format(split, self.nSamples))
@@ -406,7 +424,8 @@ class HB(data.Dataset):
         scene_id = self.annot[index]['scene_id']
         image_id = self.annot[index]['image_id']
         score = self.annot[index]['score']
-        return inp, pose, box, center, size, cls_idx, imgPath, scene_id, image_id, score
+        K = np.array(self.annot[index]['cam_K']).reshape(3, 3)
+        return inp, pose, box, center, size, cls_idx, imgPath, scene_id, image_id, score, K
 
     def __len__(self):
         return self.nSamples
@@ -423,8 +442,11 @@ class ICBIN(data.Dataset):
         for scene in ref.icbin_test_scenes:
             test_obj_dir = os.path.join(self.root_dir, 'test', scene)
             f_bbox = os.path.join(ref.bbox_dir, 'icbin', 'icbin_{:06d}_detection_result.json'.format(int(scene)))
+            f_cam = os.path.join(test_obj_dir, 'scene_camera.json')
             with open(f_bbox, 'r') as f:
                 annot_bbox = json.load(f)
+            with open(f_cam, 'r') as f:
+                annot_cam = json.load(f)
             # merge annots
             for k in annot_bbox.keys():  
                 for l in range(len(annot_bbox[k])):
@@ -438,7 +460,8 @@ class ICBIN(data.Dataset):
                     annot_temp['score'] = annot_bbox[k][l]['score']
                     annot_temp['rgb_pth'] = os.path.join(test_obj_dir, 'rgb', '{:06d}.png'.format(int(k)))
                     annot_temp['scene_id'] = int(scene)
-                    annot_temp['image_id'] = int(k)                       
+                    annot_temp['image_id'] = int(k) 
+                    annot_temp['cam_K']    = annot_cam[k]['cam_K']                      
                     annot.append(annot_temp)
         self.annot = annot
         self.nSamples = len(annot)
@@ -470,7 +493,8 @@ class ICBIN(data.Dataset):
         scene_id = self.annot[index]['scene_id']
         image_id = self.annot[index]['image_id']
         score = self.annot[index]['score']
-        return inp, pose, box, center, size, cls_idx, imgPath, scene_id, image_id, score
+        K = np.array(self.annot[index]['cam_K']).reshape(3, 3)
+        return inp, pose, box, center, size, cls_idx, imgPath, scene_id, image_id, score, K
 
     def __len__(self):
         return self.nSamples        
@@ -484,7 +508,6 @@ class ITODD(data.Dataset):
         # print('==> initializing {} {} data.'.format(cfg.pytorch.dataset, split))
         ## load dataset
         annot = []
-        '''
         # test set
         for scene in ref.itodd_val_scenes:
             test_obj_dir = os.path.join(self.root_dir, 'test', scene)
@@ -514,9 +537,6 @@ class ITODD(data.Dataset):
         # validation set    
         for scene in ref.itodd_val_scenes:
             test_obj_dir = os.path.join(self.root_dir, 'val', scene)
-            f_cam = os.path.join(test_obj_dir, 'scene_camera.json') # camera_matrix vary with images in TLESS & ITODD
-            with open(f_cam, 'r') as f:
-                annot_cam = json.load(f)
             f_bbox = os.path.join(ref.bbox_dir, 'itodd_val', 'itodd_{:06d}_val_result.json'.format(int(scene)))
             with open(f_bbox, 'r') as f:
                 annot_bbox = json.load(f)
@@ -533,9 +553,9 @@ class ITODD(data.Dataset):
                     annot_temp['score'] = annot_bbox[k][l]['score']
                     annot_temp['gray_pth']        = os.path.join(test_obj_dir, 'gray', '{:06d}.tif'.format(int(k)))
                     annot_temp['scene_id'] = int(scene)
-                    annot_temp['image_id'] = int(k)                          
-                    annot_temp['cam_K']    = annot_cam[k]['cam_K'] 
+                    annot_temp['image_id'] = int(k)                           
                     annot.append(annot_temp)
+        '''
         self.annot = annot
         self.nSamples = len(annot)
         # print('Loaded ITODD {} {} samples'.format(split, self.nSamples))
@@ -558,8 +578,7 @@ class ITODD(data.Dataset):
 
     def __getitem__(self, index):
         cls_idx, rgb_crop, box, c, s = self.GetPartInfo(index)       
-        # inp = rgb_crop[:, :, 0][None, :, :].astype(np.float32) / 255.
-        inp = rgb_crop.transpose(2, 0, 1).astype(np.float32) / 255.
+        inp = rgb_crop[:, :, 0][None, :, :].astype(np.float32) / 255.
         pose = np.zeros((3, 4))
         center = c
         size = s
@@ -568,8 +587,8 @@ class ITODD(data.Dataset):
         scene_id = self.annot[index]['scene_id']
         image_id = self.annot[index]['image_id']
         score = self.annot[index]['score']
-        imgPath = self.annot[index]['cam_K'] # 'imgPath' in TLESS & ITODD is camera_matrix
-        return inp, pose, box, center, size, cls_idx, imgPath, scene_id, image_id, score
+        K = np.array(self.annot[index]['cam_K']).reshape(3, 3)
+        return inp, pose, box, center, size, cls_idx, imgPath, scene_id, image_id, score, K
 
     def __len__(self):
         return self.nSamples

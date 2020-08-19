@@ -95,7 +95,8 @@ class LMO(data.Dataset):
         scene_id = self.annot[index]['scene_id']
         image_id = self.annot[index]['image_id']
         score = self.annot[index]['score']
-        return inp, pose, box, center, size, cls_idx, imgPath, scene_id, image_id, score
+        K = np.array(self.annot[index]['cam_K']).reshape(3, 3)
+        return inp, pose, box, center, size, cls_idx, imgPath, scene_id, image_id, score, K
 
     def __len__(self):
         return self.nSamples
@@ -178,8 +179,8 @@ class TLESS(data.Dataset):
         scene_id = self.annot[index]['scene_id']
         image_id = self.annot[index]['image_id']
         score = self.annot[index]['score']
-        K = self.annot[index]['cam_K']
-        return inp, pose, box, center, size, cls_idx, K, scene_id, image_id, score
+        K = np.array(self.annot[index]['cam_K']).reshape(3, 3)
+        return inp, pose, box, center, size, cls_idx, imgPath, scene_id, image_id, score, K
 
     def __len__(self):
         return self.nSamples
@@ -263,7 +264,8 @@ class TUDL(data.Dataset):
         scene_id = self.annot[index]['scene_id']
         image_id = self.annot[index]['image_id']
         score = self.annot[index]['score']
-        return inp, pose, box, center, size, cls_idx, imgPath, scene_id, image_id, score
+        K = np.array(self.annot[index]['cam_K']).reshape(3, 3)
+        return inp, pose, box, center, size, cls_idx, imgPath, scene_id, image_id, score, K
 
     def __len__(self):
         return self.nSamples
@@ -346,7 +348,8 @@ class YCBV(data.Dataset):
         scene_id = self.annot[index]['scene_id']
         image_id = self.annot[index]['image_id']
         score = self.annot[index]['score']
-        return inp, pose, box, center, size, cls_idx, imgPath, scene_id, image_id, score
+        K = np.array(self.annot[index]['cam_K']).reshape(3, 3)
+        return inp, pose, box, center, size, cls_idx, imgPath, scene_id, image_id, score, K
 
     def __len__(self):
         return self.nSamples
@@ -361,7 +364,7 @@ class HB(data.Dataset):
         ## load dataset
         annot = []
         for scene in ref.hb_val_scenes:
-            test_obj_dir = os.path.join(self.root_dir, 'val', scene)
+            test_obj_dir = os.path.join(self.root_dir, 'val_bop19', scene)
             f_pose = os.path.join(test_obj_dir, 'scene_gt.json')
             f_det = os.path.join(test_obj_dir, 'scene_gt_info.json')
             f_cam = os.path.join(test_obj_dir, 'scene_camera.json')
@@ -430,7 +433,8 @@ class HB(data.Dataset):
         scene_id = self.annot[index]['scene_id']
         image_id = self.annot[index]['image_id']
         score = self.annot[index]['score']
-        return inp, pose, box, center, size, cls_idx, imgPath, scene_id, image_id, score
+        K = np.array(self.annot[index]['cam_K']).reshape(3, 3)
+        return inp, pose, box, center, size, cls_idx, imgPath, scene_id, image_id, score, K
 
     def __len__(self):
         return self.nSamples
@@ -514,7 +518,8 @@ class ICBIN(data.Dataset):
         scene_id = self.annot[index]['scene_id']
         image_id = self.annot[index]['image_id']
         score = self.annot[index]['score']
-        return inp, pose, box, center, size, cls_idx, imgPath, scene_id, image_id, score
+        K = np.array(self.annot[index]['cam_K']).reshape(3, 3)
+        return inp, pose, box, center, size, cls_idx, imgPath, scene_id, image_id, score, K
 
     def __len__(self):
         return self.nSamples        
@@ -598,7 +603,8 @@ class ITODD(data.Dataset):
         scene_id = self.annot[index]['scene_id']
         image_id = self.annot[index]['image_id']
         score = self.annot[index]['score']
-        return inp, pose, box, center, size, cls_idx, imgPath, scene_id, image_id, score
+        K = np.array(self.annot[index]['cam_K']).reshape(3, 3)
+        return inp, pose, box, center, size, cls_idx, imgPath, scene_id, image_id, score, K
 
     def __len__(self):
         return self.nSamples

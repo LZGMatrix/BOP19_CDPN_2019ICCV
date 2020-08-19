@@ -10,9 +10,14 @@ from progress.bar import Bar
 
 def test(cfg, dataLoader, model, models_info=None, models_vtx=None):
     model.eval()
-    if cfg.pytorch.exp_mode in ['val']:
+    if cfg.pytorch.exp_mode == 'val':
         from eval import Evaluation
-        Eval = Evaluation(cfg.pytorch, models_info, models_vtx)     
+        Eval = Evaluation(cfg.pytorch, models_info, models_vtx)  
+        csv_file = open(cfg.pytorch.save_csv_path, 'w')
+        fieldnames = ['scene_id', 'im_id', 'obj_id', 'score', 'R', 't', 'time']
+        csv_writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+        csv_writer.writeheader()
+        rst_collect = []   
     elif cfg.pytorch.exp_mode == 'test':
         csv_file = open(cfg.pytorch.save_csv_path, 'w')
         fieldnames = ['scene_id', 'im_id', 'obj_id', 'score', 'R', 't', 'time']
@@ -24,11 +29,9 @@ def test(cfg, dataLoader, model, models_info=None, models_vtx=None):
     nIters = len(dataLoader)
     bar = Bar('{}_{}'.format(cfg.pytorch.dataset, cfg.pytorch.object), max=nIters)
     wall_time = 0
-    for i, (input, pose, bbox, center, size, clsIdx, imgPath, scene_id, image_id, score) in enumerate(dataLoader):
+    for i, (input, pose, bbox, center, size, clsIdx, imgPath, scene_id, image_id, score, K) in enumerate(dataLoader):
         input_var = input.cuda(cfg.pytorch.gpu, async=True).float().cuda(cfg.pytorch.gpu)
         batch_size = len(input)
-        if cfg.pytorch.dataset.lower() == 'tless' or cfg.pytorch.dataset.lower() == 'itodd': # camera_matrix vary with images in TLESS & ITODD
-            K = np.array(imgPath).reshape(3,3) # 'imgPath' in TLESS & ITODD is camera_matrix
         # time begin
         T_begin = time.time()
         output_conf, output_coor_x, output_coor_y, output_coor_z = model(input_var)
@@ -38,10 +41,10 @@ def test(cfg, dataLoader, model, models_info=None, models_vtx=None):
         outConf = output_conf.data.cpu().numpy().copy()
         output_trans = np.zeros(batch_size)
         collector = list(zip(clsIdx.numpy(), output_coor_x, output_coor_y, output_coor_z, outConf,
-                                pose.numpy(), bbox.numpy(), center.numpy(), size.numpy(), input.numpy(), scene_id.numpy(), image_id.numpy(), score.numpy()))
+                                pose.numpy(), bbox.numpy(), center.numpy(), size.numpy(), input.numpy(), scene_id.numpy(), image_id.numpy(), score.numpy(), K))                      
         colLen = len(collector)
         for idx in range(colLen):
-            clsIdx_, output_coor_x_, output_coor_y_, output_coor_z_, output_conf_, pose_gt, bbox_, center_, size_, input_, scene_id_, image_id_, score_ = collector[idx]                
+            clsIdx_, output_coor_x_, output_coor_y_, output_coor_z_, output_conf_, pose_gt, bbox_, center_, size_, input_, scene_id_, image_id_, score_, K_ = collector[idx]                
             if cfg.pytorch.dataset.lower()  == 'lmo':
                 cls = ref.lmo_id2obj[int(clsIdx_)]
             elif cfg.pytorch.dataset.lower() == 'tless':
@@ -56,7 +59,6 @@ def test(cfg, dataLoader, model, models_info=None, models_vtx=None):
                 cls = ref.icbin_id2obj[clsIdx_]
             elif cfg.pytorch.dataset.lower() == 'itodd':
                 cls = ref.itodd_id2obj[int(clsIdx_)]
-            
 
             select_pts_2d = []
             select_pts_3d = []
@@ -98,8 +100,9 @@ def test(cfg, dataLoader, model, models_info=None, models_vtx=None):
             image_points = np.asarray(select_pts_2d, dtype=np.float32)
             try:
                 if cfg.pytorch.dataset.lower() == 'tless' or cfg.pytorch.dataset.lower() == 'itodd': # camera_matrix vary with images in TLESS & ITODD
+                    K_ = K_.numpy().reshape(3, 3)
                     _, R_vector, T_vector, inliers = cv2.solvePnPRansac(model_points, image_points,
-                                        K, np.zeros((4, 1)), flags=cv2.SOLVEPNP_EPNP)
+                                        K_, np.zeros((4, 1)), flags=cv2.SOLVEPNP_EPNP)
                 else:
                     _, R_vector, T_vector, inliers = cv2.solvePnPRansac(model_points, image_points,
                                         cfg.pytorch.camera_matrix, np.zeros((4, 1)), flags=cv2.SOLVEPNP_EPNP)
@@ -114,18 +117,24 @@ def test(cfg, dataLoader, model, models_info=None, models_vtx=None):
                     Eval.pose_gt_all[cls].append(pose_gt)
                     Eval.num[cls] += 1
                     Eval.numAll += 1
+                    rst = {'scene_id': int(scene_id_), 'im_id': int(image_id_), 'R': R_matrix.reshape(-1).tolist(), 't': T_vector.reshape(-1).tolist(),
+                           'score': float(score_), 'obj_id': int(clsIdx), 'time': cur_wall_time}
+                    rst_collect.append(rst)
                 elif cfg.pytorch.exp_mode == 'test': 
                     rst = {'scene_id': int(scene_id_), 'im_id': int(image_id_), 'R': R_matrix.reshape(-1).tolist(), 't': T_vector.reshape(-1).tolist(),
                            'score': float(score_), 'obj_id': int(clsIdx), 'time': cur_wall_time}
                     rst_collect.append(rst)
             except:
-                if cfg.pytorch.exp_mode in ['val']:
+                if cfg.pytorch.exp_mode == 'val':
                     Eval.num[cls] += 1
                     Eval.numAll += 1                
         Bar.suffix = '{0} [{1}/{2}]| Total: {total:} | ETA: {eta:}'.format(cfg.pytorch.exp_mode, i, nIters, total=bar.elapsed_td, eta=bar.eta_td)
         bar.next()
     if cfg.pytorch.exp_mode == 'val':
         Eval.evaluate_pose()
+        for item in rst_collect:
+            csv_writer.writerow(item)
+        csv_file.close()
     elif cfg.pytorch.exp_mode == 'test':
         for item in rst_collect:
             csv_writer.writerow(item)

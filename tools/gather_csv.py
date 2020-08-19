@@ -23,13 +23,13 @@ result_dir = os.path.join(exp_dir, 'final_result')
 if not os.path.exists(os.path.join(result_dir)):
     os.makedirs(os.path.join(result_dir))
 
-datasets = ['TLESS'] # ['LMO', 'YCBV', 'TUDL', 'TLESS', 'HB', 'ICBIN', 'ITODD']
+datasets = ['ICBIN'] # ['LMO', 'YCBV', 'TUDL', 'TLESS', 'HB', 'ICBIN', 'ITODD']
 for dataset in datasets:
     files = glob(os.path.join(exp_dir, '{}_*'.format(dataset.upper()), '*'))
-    print(files)   
-    print('num: {}'.format(len(files))) 
+    print(files)    
     # detection time
     time_total = {}
+    
     detection_paths = glob(os.path.join(ref.bbox_dir, dataset.lower(), '*'))
     for detection_path in detection_paths:
         with open(detection_path, 'r') as f:
@@ -45,7 +45,7 @@ for dataset in datasets:
             time_total[scene_id][im_id] = float(detection_file[str(im_id)][0]['time'])
 
         f.close()
-
+    
     # calculate time per image
     data = []
     for file in files:
@@ -58,6 +58,12 @@ for dataset in datasets:
             continue
         scene_id = int(data[i][0])
         im_id = int(data[i][1])
+        '''
+        if scene_id not in time_total.keys():
+            time_total[scene_id] = {}
+        if im_id not in time_total[scene_id].keys():
+            time_total[scene_id][im_id] = 0.0
+        '''
         time_pose = float(data[i][6])
         time_total[scene_id][im_id] += float(time_pose)
     print(time_total)
