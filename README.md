@@ -21,14 +21,15 @@ CDPNv2 for BOP20 challenge (mainly based on "CDPN: Coordinates-Based Disentangle
 
 ## Pose Estimation
 
-The difference between our CDPNv2 and the BOP19-version CDPN.
+The difference between our CDPNv2 and the BOP19-version CDPN mainly including:
 
-1. Network Architecture
+- Domain Randomization: We used stronger domain randomization operations than BOP19. The details will be provided after the deadline.
 
-    Considering the organizer provides high-quality PBR synthetic training data in BOP20, we adopt a deeper 34-layer Resnet as the backbone instead of the 18-layer Resnet used in BOP19-version CDPN. Also, the fancy concat structures in BOP19-version CDPN are removed. The input and output resolutions are 256\*256 and 64\*64 respectively, which is same to the version in [paper](https://openaccess.thecvf.com/content_ICCV_2019/papers/Li_CDPN_Coordinates-Based_Disentangled_Pose_Network_for_Real-Time_RGB-Based_6-DoF_Object_ICCV_2019_paper.pdf). The smaller output resolution (BOP20 64\*64 VS. BOP19 128\*128) makes the ransac faster.
- 
-2. Domain Randomization.
-    In BOP20 challenge, we used stronger domain randomization operations than BOP19. The details will be provided after the deadline.
+- Network Architecture: Considering the organizer provides high-quality PBR synthetic training data in BOP20, we adopt a deeper 34-layer Resnet as the backbone instead of the 18-layer Resnet used in BOP19-version CDPN. Also, the fancy concat structures in BOP19-version CDPN are removed. The input and output resolutions are 256×256 and 64×64 respectively.
+
+- Training During training, the initial learning rate was 1 × 10−4 and the batch size was 6. We used RMSProp with alpha 0.99 and epsilon 1× 10−8 to optimize the network. The model was trained for 160 epochs in total and the learning rate was divided by 10 every 50 epochs
+
+- Other implementations, such as the coordinates labels were computed by back-projection from the rendered depth, instead of forward-projection with z-buffer.
 
 ## Data Preparation
 1. Download the 7 core datasets from the [BOP website](https://bop.felk.cvut.cz/datasets/)
