@@ -9,9 +9,6 @@ python setup.py develop
 
 # install other dependencies
 sh scripts/install_deps.sh
-
-cd core/csrc/
-sh compile.sh
 ```
 
 ## Prepare datasets
