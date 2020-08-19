@@ -4,7 +4,7 @@
 
 #### **Find CDPN trained with PBR data for BOP20 [(https://github.com/LZGMatrix/BOP19_CDPN_2019ICCV/tree/bop2019_pbr)](https://github.com/LZGMatrix/BOP19_CDPN_2019ICCV/tree/bop2019_pbr)**
 
-# BOP20_CDPN_2019ICCV
+# CDPNv2 for BOP20
 
 CDPNv2 for BOP20 challenge (mainly based on "CDPN: Coordinates-Based Disentangled Pose Network for Real-Time RGB-Based 6-DoF Object Pose Estimation" on ICCV 2019).
 
