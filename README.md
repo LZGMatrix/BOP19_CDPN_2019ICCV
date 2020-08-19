@@ -1,5 +1,3 @@
-### **The trained CDPNv2 weights for BOP20 Challenge will be provided soon!**
-
 #### **Find CDPN for BOP19 in the [(https://github.com/LZGMatrix/BOP19_CDPN_2019ICCV)](https://github.com/LZGMatrix/BOP19_CDPN_2019ICCV/tree/bop2020)**
 
 #### **Find CDPN trained with PBR data for BOP20 [(https://github.com/LZGMatrix/BOP19_CDPN_2019ICCV/tree/bop2019_pbr)](https://github.com/LZGMatrix/BOP19_CDPN_2019ICCV/tree/bop2019_pbr)**
@@ -7,6 +5,8 @@
 # CDPNv2 for BOP20
 
 CDPNv2 for BOP20 challenge (mainly based on "CDPN: Coordinates-Based Disentangled Pose Network for Real-Time RGB-Based 6-DoF Object Pose Estimation" on ICCV 2019).
+
+### **The trained CDPNv2 weights for BOP20 Challenge will be provided soon!**
 
 ## Our test environments (the same as CDPN in bop19)
 - Ubuntu 16.04 (64bit)
