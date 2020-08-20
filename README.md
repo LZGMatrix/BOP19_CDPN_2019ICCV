@@ -6,7 +6,7 @@
 
 CDPNv2 for BOP20 challenge (mainly based on "CDPN: Coordinates-Based Disentangled Pose Network for Real-Time RGB-Based 6-DoF Object Pose Estimation" on ICCV 2019).
 
-### **The trained CDPNv2 weights for BOP20 Challenge will be provided soon!**
+### **The trained CDPNv2 weights for BOP20 Challenge have been provided!**
 
 ## Our test environments (the same as CDPN in bop19)
 - Ubuntu 16.04 (64bit)
@@ -33,7 +33,7 @@ The difference between our CDPNv2 and the BOP19-version CDPN mainly including:
 
 ## Data Preparation
 1. Download the 7 core datasets from the [BOP website](https://bop.felk.cvut.cz/datasets/)
-2. Download our [trained models]() and [detection results]().
+2. Download our [trained models](https://pan.baidu.com/s/1nB9c8tFQedwiRXHrxblGhg)(extraction code: 3jfn) and [detection results]().
 3. Prepare the data as follows:
 
     Note: 
