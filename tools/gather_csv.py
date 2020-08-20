@@ -23,7 +23,7 @@ result_dir = os.path.join(exp_dir, 'final_result')
 if not os.path.exists(os.path.join(result_dir)):
     os.makedirs(os.path.join(result_dir))
 
-datasets = ['TLESS'] # ['LMO', 'YCBV', 'TUDL', 'TLESS', 'HB', 'ICBIN', 'ITODD']
+datasets = ['LMO', 'YCBV', 'TUDL', 'TLESS', 'HB', 'ICBIN', 'ITODD']
 for dataset in datasets:
     files = glob(os.path.join(exp_dir, '{}_*'.format(dataset.upper()), '*'))
     print(files)   
