@@ -20,3 +20,4 @@ for dataset in datasets:
 	for obj in objects:
 		os.system('python main.py --cfg=cfg.yaml --exp_mod={} --dataset={} --object={}'.format('test', dataset, obj))
 		
+python gather_csv.py
