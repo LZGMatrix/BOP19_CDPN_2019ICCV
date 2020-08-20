@@ -33,7 +33,7 @@ The difference between our CDPNv2 and the BOP19-version CDPN mainly including:
 
 ## Data Preparation
 1. Download the 7 core datasets from the [BOP website](https://bop.felk.cvut.cz/datasets/)
-2. Download our [trained models](https://drive.google.com/drive/folders/1GoCSOVZk0kzxS5e--oVXS83wpRHd9qJO?usp=sharing) and [detection results](https://drive.google.com/drive/folders/1nTP87zzF9l7VO3UEjcEbX61J3-6wRbuf?usp=sharing).
+2. Download our [trained models]() and [detection results]().
 3. Prepare the data as follows:
 
     Note: 
