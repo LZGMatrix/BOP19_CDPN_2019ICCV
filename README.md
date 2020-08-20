@@ -74,14 +74,13 @@ Root
 │   │   ├── obj_ape.checkpoint
 │   │   └── ...
 │   └── ...
-├── bbox_retinanet
+├── bbox
 │   ├── lmo
 │   │   ├── lmo_test_bop19_000002.json
 │   │   └── ... 
 │   └── ...
 ├── lib
 ├── tools
-├── detection
 └── exp
 ```
 ## Run
