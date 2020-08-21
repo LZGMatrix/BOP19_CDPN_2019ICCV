@@ -1,0 +1,7 @@
+detection/annotations/test_icbin.json filter=lfs diff=lfs merge=lfs -text
+detection/annotations/test_itodd.json filter=lfs diff=lfs merge=lfs -text
+detection/annotations/test_lmo.json filter=lfs diff=lfs merge=lfs -text
+detection/annotations/test_tless.json filter=lfs diff=lfs merge=lfs -text
+detection/annotations/test_tudl.json filter=lfs diff=lfs merge=lfs -text
+detection/annotations/test_ycbv.json filter=lfs diff=lfs merge=lfs -text
+detection/annotations/test_hb.json filter=lfs diff=lfs merge=lfs -text
