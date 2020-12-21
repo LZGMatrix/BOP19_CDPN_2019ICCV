@@ -1,6 +1,7 @@
-#### **Find CDPN for BOP19 in the [(https://github.com/LZGMatrix/BOP19_CDPN_2019ICCV)](https://github.com/LZGMatrix/BOP19_CDPN_2019ICCV/tree/bop2020)**
-
-#### **Find CDPN trained with PBR data for BOP20 [(https://github.com/LZGMatrix/BOP19_CDPN_2019ICCV/tree/bop2019_pbr)](https://github.com/LZGMatrix/BOP19_CDPN_2019ICCV/tree/bop2019_pbr)**
+## News
+- We have released the [official training code](https://github.com/LZGMatrix/CDPN_ICCV2019_ZhigangLi) of CDPN to reproduce the impressive results in our ICCV2019 paper.
+- Find CDPN for BOP19 in the [(https://github.com/LZGMatrix/BOP19_CDPN_2019ICCV)](https://github.com/LZGMatrix/BOP19_CDPN_2019ICCV/tree/bop2020)
+- Find CDPN trained with PBR data for BOP20 [(https://github.com/LZGMatrix/BOP19_CDPN_2019ICCV/tree/bop2019_pbr)](https://github.com/LZGMatrix/BOP19_CDPN_2019ICCV/tree/bop2019_pbr)
 
 # CDPNv2 for BOP20
 
