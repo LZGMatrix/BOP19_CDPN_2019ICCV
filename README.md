@@ -1,11 +1,12 @@
+## News
+- We have released the [official training code](https://github.com/LZGMatrix/CDPN_ICCV2019_ZhigangLi) of CDPN to reproduce the impressive results in our ICCV2019 paper.
+- Find CDPNv2 for BOP20 in the branch of [bop2020](https://github.com/LZGMatrix/BOP19_CDPN_2019ICCV/tree/bop2020)
+- Find CDPN trained with PBR data for BOP20 in the branch of [bop2019_pbr](https://github.com/LZGMatrix/BOP19_CDPN_2019ICCV/tree/bop2019_pbr)
+
 # BOP19_CDPN_2019ICCV
 
 The modified version of CDPN ("CDPN: Coordinates-Based Disentangled Pose Network for Real-Time RGB-Based 6-DoF Object Pose Estimation" on ICCV 2019) for BOP: Benchmark for 6D Object Pose Estimation Challenge 2019.
 
-
-**Find CDPNv2 for BOP20 in the branch of [bop2020](https://github.com/LZGMatrix/BOP19_CDPN_2019ICCV/tree/bop2020)**
-
-**Find CDPN trained with PBR data for BOP20 in the branch of [bop2019_pbr](https://github.com/LZGMatrix/BOP19_CDPN_2019ICCV/tree/bop2019_pbr)**
 
 
 ## Our test environments
